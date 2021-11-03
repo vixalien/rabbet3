@@ -1,0 +1,13 @@
+{
+  "name": "rabbet",
+  "version": "1.0.0",
+  "description": "Rabbet: build a small site from links and text",
+  "main": " ",
+  "repository": "https://github.com/vixalien/rabbet3",
+  "author": "vixalien <hey@vixalien.ga>",
+  "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ],
+  "private": true
+}

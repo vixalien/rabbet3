@@ -1,0 +1,18 @@
+{
+  "devDependencies": {
+    "stylus": "^0.55.0"
+  },
+  "name": "@rabbet/render",
+  "version": "0.0.0",
+  "description": "Render Rabbet Pages",
+  "main": "render.js",
+  "license": "MIT",
+  "private": true,
+  "author": "vixalien",
+  "scripts": {
+    "build": "node build"
+  },
+  "dependencies": {
+    "clp": "^4.0.12"
+  }
+}

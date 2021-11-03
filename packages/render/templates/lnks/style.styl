@@ -1,0 +1,51 @@
+// variables
+max-width = 580px
+body-margin = 0 auto
+body-padding = 0 10px
+
+// page - lnks theme
+.link-page
+	--max-width max-width
+	--body-margin body-margin
+	--body-padding body-padding
+	max-width var(--max-width)
+	margin var(--body-margin)
+	padding var(--body-padding)
+	margin-bottom 100px
+	a
+		color #000
+		border-bottom none
+		text-decoration underline
+		text-decoration-style dotted
+		text-underline-offset 3px
+		text-decoration-color #999
+		text-decoration-thickness 1px
+	div.account-name
+		color #999
+	h1.link-name
+		margin 5px 0 25px
+	div.link-about
+		color #444
+		margin 0 0 65px
+		word-break break-word
+	.links
+		grid-template-columns auto auto
+		display grid
+		gap 20px
+		dt, dd a
+			word-break break-word
+			white-space pre-wrap
+		dt
+			color #999
+		dd
+			margin 0
+		@media screen and (max-width max-width)
+			grid-template-columns auto
+			gap 0
+			dd
+				margin-bottom 40px
+	lite-youtube
+		border-radius 10px
+		box-sizing unset
+		border 1px solid
+		max-height 300px

@@ -1,0 +1,24 @@
+{
+  "name": "@rabbet/pages",
+  "version": "1.0.0",
+  "description": "render rabbet pages",
+  "main": "index.js",
+  "repository": "https://github.com/vixalien/rabbet",
+  "author": "vixalien",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "node api",
+    "dev": "nodemon api",
+    "build:templates": "node ../render/build -o dist",
+    "build": "yarn build:templates"
+  },
+  "dependencies": {
+    "@google-cloud/firestore": "^4.15.1",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.14"
+  }
+}
