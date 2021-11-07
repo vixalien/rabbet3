@@ -1,37 +1,73 @@
-require('dotenv').config();
-const Firestore = require('@google-cloud/firestore');
-const { atob } = require("../btoa");
+const fetch = require("isomorphic-fetch");
+const { toPOJO } = require("../convert");
+// const CONSTANTS = require("../constants");
 
-// initialize db
-let credentials = JSON.parse(atob(process.env.GOOGLE_STORAGE_JSON));
-const db = new Firestore({
-  projectId: credentials.project_id,
-  credentials,
-});
-
-let query = async (COLLECTION, q = a => a, one = false) => {
-  let snapshot = db.collection(COLLECTION);
-  let result = await q(snapshot).get();
-  result.exists = result.exists ||! result.empty;
-  result.get = () => get(result, one);
-  return result;
+CONSTANTS = {
+	ROOT_URL: "https://firestore.googleapis.com/v1/",
+	PROJECT: "rabbetv4",
+	DATABASE: "(default)"
 }
 
-let find = (COLLECTION, q) => query(COLLECTION, q, true);
+CONSTANTS.ROOT_NAME = `projects/${CONSTANTS.PROJECT}/databases/${CONSTANTS.DATABASE}/documents`;
+CONSTANTS.ROOT_PATH = `${CONSTANTS.ROOT_URL}${CONSTANTS.ROOT_NAME}`;
 
-let get = async (snapshot, one) => {
-  if (!snapshot.forEach) return snapshot.data();
-  let obj = {};
-  snapshot.forEach((doc) => {
-    obj[doc.id] = doc.data();
-  });
-  if (one) {
-    let _id = Object.keys(obj)[0]
-    let data = obj[_id] || {};
-    data._id = _id;
-    return data;
-  };
-  return obj;
+let find = (collection, id) => {
+	return fetch(`${CONSTANTS.ROOT_PATH}/${collection}/${id}`);
+
+	// test
+	// get("pages", "2bbk5V6xMZsinNwhhTLN");
 }
 
-module.exports = { query, get, find };
+let query = (collection, ...queries) => {
+	let collections = [collection].flat();
+	queries = [queries].flat();
+	return fetch(`${CONSTANTS.ROOT_PATH}:runQuery`, {
+		method: "POST",
+		body: JSON.stringify({
+			structuredQuery: {
+				"where": {
+					"compositeFilter": {
+						"op": "and",
+						"filters": [
+							queries.map(query => {
+								if (query[1] == "==") query[1] = "EQUAL";
+								return {
+									"fieldFilter": {
+										"field": { "fieldPath": query[0] },
+										"op": query[1],
+										"value": { "stringValue": query[2] }
+									}
+								}
+							})
+						]
+					}
+				},
+				"from": collections.map(collection => {
+					return {
+						collectionId: collection,
+						allDescendants: false
+					}
+				})
+			}
+		})
+	})
+		.then(data => {
+			if (data.ok) return data;
+			else throw data;
+		})
+		.then(data => data.json())
+		.then(data => {
+			return data.map(doc => {
+				return {
+					...doc.document,
+					_id: doc.document.name.replace(new RegExp('^' + CONSTANTS.ROOT_NAME.replace('(', '\\(').replace(')', '\\)') + '/' + collection + '/'), ''),
+					fields: toPOJO(doc.document.fields)
+				}
+			})
+		})
+
+	// test
+	// query("hello", ["username", "EQUAL", hello]);
+}
+
+module.exports = { query, find };

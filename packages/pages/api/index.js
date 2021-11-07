@@ -25,15 +25,13 @@ app.get('/p/:username/:slug', async (req, res, next) => {
   // fetch user & page
   // test username = vixalien
   // test slug = test
-  let user = await firestore.find("users", s => s.where("username", "==", username))
-  if (user.exists) {
-    let userData = await user.get();
-    let page = await firestore.find("pages", s => s.where("user_uid", "==", userData._id).where("slug", "==", slug))
-    if (page.exists) {
-      let pageData = await page.get();
+  let user = await firestore.query("users", ["username", "==", username]).then(e => e[0])
+  if (user) {
+    let page = await firestore.query("pages", ["user_uid", "==", user._id], ["slug", "==", slug]).then(e => e[0])
+    if (page) {
       // render the page
       res.setHeader('Content-Type', 'text/html');
-      return res.send(render(pageData, templates));
+      return res.send(render(page.fields, templates));
     } else {
       next();
     }
