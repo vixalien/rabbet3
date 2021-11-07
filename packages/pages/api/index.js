@@ -4,7 +4,6 @@ const app = express();
 
 const render = require("@rabbet/render");
 const firestore = require('../lib/firestore');
-const templates = require("../dist/templates");
 
 const port = process.env.PORT || 3001;
 
@@ -31,7 +30,8 @@ app.get('/p/:username/:slug', async (req, res, next) => {
     if (page) {
       // render the page
       res.setHeader('Content-Type', 'text/html');
-      return res.send(render(page.fields, templates));
+      return render(page.fields)
+        .then(html => res.send(html));
     } else {
       next();
     }

@@ -10,7 +10,7 @@
   "scripts": {
     "start": "node api",
     "dev": "nodemon api",
-    "build:templates": "node ../render/build -o dist",
+    "build:templates": "node ../render/build",
     "build": "yarn build:templates"
   },
   "dependencies": {
