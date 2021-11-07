@@ -66,4 +66,5 @@ Promise.all(ALL_TEMPLATES.map(async template => {
 
 		await esbuild.build(options)
 		fs.unlinkSync(TEMPF_OUT);
+		console.log("Built templates successfully")
 	});
