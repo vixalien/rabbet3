@@ -13,7 +13,6 @@
     "build": "node build"
   },
   "dependencies": {
-    "clp": "^4.0.12",
     "esbuild": "^0.13.12"
   }
 }

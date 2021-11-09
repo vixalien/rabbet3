@@ -1,40 +1,58 @@
 const esbuild = require('esbuild');
 
-const clp = require("clp")
 const path = require('path')
 const fs = require('fs')
 
 const stylus = require('stylus')
 
-let args = clp(process.argv);
+const CONSTANTS = require("./constants");
 
-let OUTPUT_DIR = args.output || args.o;
-
-let CONFIG = {
-	TEMPLATES_DIR: path.resolve(__dirname, 'templates'),
-	SOURCE_DIR: path.resolve(__dirname, 'src'),
-	OWN_OUTPUT: path.resolve(__dirname, 'dist'),
-	OUTPUT: path.resolve(OUTPUT_DIR ? path.resolve(process.cwd(), OUTPUT_DIR) : path.resolve(__dirname, 'dist'), 'templates.json'),
-}
-
-let ALL_TEMPLATES = fs.readdirSync(CONFIG.TEMPLATES_DIR);
+let ALL_TEMPLATES = fs.readdirSync(CONSTANTS.TEMPLATES_DIR);
 
 let str = "";
 
-Promise.all(ALL_TEMPLATES.map(async template => {
-	str += `import ${template} from "${path.resolve(CONFIG.TEMPLATES_DIR, template, 'page.js').replace(/\\/g, "//")}";`;
+const loadStylus = async () => {
+	let stylusPath = path.resolve(__dirname, 'src', 'base.styl');
+	let stylusString = fs.readFileSync(stylusPath, 'utf8');
+	let mainStylus = await new Promise((res, rej) => {
+		stylus(stylusString)
+		  .set('compress', true)
+		  .set('filename', 'style.css')
+		  .render(function(err, css){
+		    if (err) rej(err);
+		    res(css);
+		  });
+	})
+		.then(stylus => {
+			let CSS_OUT = path.resolve(CONSTANTS.OWN_OUTPUT, "main.css");
 
-	let metafile = path.resolve(CONFIG.TEMPLATES_DIR, template, 'metadata.js'), metadata;
-	if (fs.existsSync(metafile)) {
-		metadata = require(metafile);
-		if (typeof metadata === "function") metadata = await metadata();
-		metadata = JSON.stringify(metadata);
-		str += "\n";
-		str += `${template}.data = ${metadata}`;
-	}
+			return fs.writeFileSync(CSS_OUT, stylus);
+		})
+	return mainStylus;
+}
 
-	str += "\n";
-}))
+// ensure output dir exists
+if (!fs.existsSync(path.resolve(CONSTANTS.OWN_OUTPUT))){
+  fs.mkdirSync(path.resolve(CONSTANTS.OWN_OUTPUT));
+}
+
+loadStylus()
+	.then(() => {
+		return Promise.all(ALL_TEMPLATES.map(async template => {
+			str += `import ${template} from "${path.resolve(CONSTANTS.TEMPLATES_DIR, template, 'page.js').replace(/\\/g, "//")}";`;
+
+			let metafile = path.resolve(CONSTANTS.TEMPLATES_DIR, template, 'metadata.js'), metadata;
+			if (fs.existsSync(metafile)) {
+				metadata = require(metafile);
+				if (typeof metadata === "function") metadata = await metadata();
+				metadata = JSON.stringify(metadata);
+				str += "\n";
+				str += `${template}.data = ${metadata}`;
+			}
+
+			str += "\n";
+		}));
+	})
 	.then(async () => {
 		if (str) {
 			str += "\n";
@@ -42,12 +60,8 @@ Promise.all(ALL_TEMPLATES.map(async template => {
 			str += `export default templates`;
 		};
 
-		let TEMPF_OUT = path.resolve(CONFIG.OWN_OUTPUT, "all_templates.js");
+		let TEMPF_OUT = path.resolve(CONSTANTS.OWN_OUTPUT, "all_templates.js");
 
-		// ensure dir exists
-		if (!fs.existsSync(path.resolve(CONFIG.OWN_OUTPUT))){
-		  fs.mkdirSync(path.resolve(CONFIG.OWN_OUTPUT));
-		}
 		fs.writeFileSync(TEMPF_OUT, str);
 
 		// NOW BUILDING
@@ -60,7 +74,7 @@ Promise.all(ALL_TEMPLATES.map(async template => {
 			minify: true,
 			platform: 'node',
 			format: 'cjs',
-			outfile: path.resolve(CONFIG.OWN_OUTPUT, "templates.js")
+			outfile: path.resolve(CONSTANTS.OWN_OUTPUT, "templates.js")
 		};
 
 

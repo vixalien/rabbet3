@@ -3,6 +3,8 @@ let path = require('path');
 let stylus = require('stylus');
 let ejs = require('./lib/ejs.js');
 
+const CONSTANTS = require("./constants");
+
 let templateFile = fs.readFileSync(path.resolve(__dirname, 'src', 'template.html'), 'utf8');
 
 let generateDefaultMetaData = (page) => {
@@ -26,18 +28,7 @@ const isValidURL = (s) => {
 
 
 const loadStylus = async () => {
-	let stylusPath = path.resolve(__dirname, 'src', 'base.styl');
-	let stylusString = fs.readFileSync(stylusPath, 'utf8');
-	let mainStylus = await new Promise((res, rej) => {
-		stylus(stylusString)
-		  .set('compress', true)
-		  .set('filename', 'style.css')
-		  .render(function(err, css){
-		    if (err) rej(err);
-		    res(css);
-		  });
-	});
-	return mainStylus;
+	return fs.readFileSync(path.resolve(CONSTANTS.OWN_OUTPUT, "main.css"));
 }
 
 let hydratePage = ({ meta, page, templateFile, mainStylus }) => {
