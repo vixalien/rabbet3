@@ -80,5 +80,5 @@ loadStylus()
 
 		await esbuild.build(options)
 		fs.unlinkSync(TEMPF_OUT);
-		console.log("Built templates successfully")
+		console.log("Built templates successfully to:", path.resolve(CONSTANTS.OWN_OUTPUT, "templates.js"))
 	});
