@@ -10,10 +10,11 @@
   "scripts": {
     "start": "node api",
     "dev": "nodemon api",
-    "build:templates": "yarn workspace @rabbet/pages run build",
+    "build:templates": "node ./node_modules/@rabbet/render/build",
     "build": "yarn build:templates"
   },
   "dependencies": {
+    "@rabbet/render": "./packages/render",
     "express": "^4.17.1",
     "isomorphic-fetch": "^3.0.0"
   },
