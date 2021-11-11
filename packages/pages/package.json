@@ -10,7 +10,7 @@
   "scripts": {
     "start": "node api",
     "dev": "nodemon api",
-    "build:templates": "node ../render/build",
+    "build:templates": "yarn workspace @rabbet/pages run build",
     "build": "yarn build:templates"
   },
   "dependencies": {
