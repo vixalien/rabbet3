@@ -1,7 +1,4 @@
 {
-  "dependencies": {
-    "stylus": "^0.55.0"
-  },
   "name": "@rabbet/render",
   "version": "0.0.0",
   "description": "Render Rabbet Pages",
@@ -13,6 +10,7 @@
     "build": "node build"
   },
   "dependencies": {
-    "esbuild": "^0.13.12"
+    "esbuild": "^0.13.12",
+    "stylus": "^0.55.0"
   }
 }
