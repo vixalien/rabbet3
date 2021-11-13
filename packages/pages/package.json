@@ -14,7 +14,7 @@
     "build": "yarn build:templates"
   },
   "dependencies": {
-    "@rabbet/render": "./packages/render",
+    "@rabbet/render": "../render",
     "express": "^4.17.1",
     "isomorphic-fetch": "^3.0.0"
   },

@@ -6,8 +6,5 @@
   "repository": "https://github.com/vixalien/rabbet3",
   "author": "vixalien <hey@vixalien.ga>",
   "license": "MIT",
-  "workspaces": [
-    "packages/*"
-  ],
   "private": true
 }

@@ -28,7 +28,7 @@ const isValidURL = (s) => {
 
 
 const loadStylus = async () => {
-	return fs.readFileSync(path.resolve(CONSTANTS.OWN_OUTPUT, "main.css"));
+	return fs.readFileSync(path.resolve(CONSTANTS.OWN_OUTPUT, "main.css"), "utf8");
 }
 
 let hydratePage = ({ meta, page, templateFile, mainStylus }) => {
@@ -62,7 +62,6 @@ let hydratePage = ({ meta, page, templateFile, mainStylus }) => {
 }
 
 let render = async (page, options = {}, templates = require(path.resolve(__dirname, "dist", "templates.js")).default) => {
-	console.log("templates", templates);
 	if (!page) throw "no page provided";
 	if (!templates) throw "no templates provided";
 	let available_templates = Object.keys(templates);
