@@ -61,7 +61,8 @@ let hydratePage = ({ meta, page, templateFile, mainStylus }) => {
 		.replace('<!-- PAGE-CONTENT -->', `<div class="link-page">${meta.html}</div>`)
 }
 
-let render = async (page, options = {}, templates = require(path.resolve(__dirname, "dist", "templates.js")).default) => {
+let render = async (page, options = {}, templates /* = require(path.resolve(__dirname, "dist", "templates.js")).default */) => {
+	return "contents of dist folder" + fs.readdirSync(path.resolve(__dirname, "dist" )).join(", ");
 	if (!page) throw "no page provided";
 	if (!templates) throw "no templates provided";
 	let available_templates = Object.keys(templates);
