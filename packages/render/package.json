@@ -1,5 +1,5 @@
 {
-  "devDependencies": {
+  "dependencies": {
     "stylus": "^0.55.0"
   },
   "name": "@rabbet/render",
