@@ -11,7 +11,7 @@
     "start": "node api",
     "dev": "nodemon api",
     "build:templates": "node ./node_modules/@rabbet/render/build",
-    "build": "yarn build:templates"
+    "build": "yarn build:templates && ls -alF node_modules && ls -alF node_modules/@rabbet"
   },
   "dependencies": {
     "@rabbet/render": "../render",
