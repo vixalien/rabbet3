@@ -1,0 +1,60 @@
+.link-page {
+  --max-width: 580px;
+  --body-margin: 0 auto;
+  --body-padding: 0 10px;
+  max-width: var(--max-width);
+  margin: var(--body-margin);
+  padding: var(--body-padding);
+  margin-bottom: 100px;
+}
+.link-page a {
+  color: #000;
+  border-bottom: none;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 3px;
+  text-decoration-color: #999;
+  text-decoration-thickness: 1px;
+}
+.link-page div.account-name {
+  color: #999;
+}
+.link-page h1.link-name {
+  margin: 5px 0 25px;
+}
+.link-page div.link-about {
+  color: #444;
+  margin: 0 0 65px;
+  word-break: break-word;
+}
+.link-page .links {
+  grid-template-columns: auto auto;
+  display: grid;
+  gap: 20px;
+}
+.link-page .links dt,
+.link-page .links dd a {
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+.link-page .links dt {
+  color: #999;
+}
+.link-page .links dd {
+  margin: 0;
+}
+@media screen and (max-width: 580px) {
+  .link-page .links {
+    grid-template-columns: auto;
+    gap: 0;
+  }
+  .link-page .links dd {
+    margin-bottom: 40px;
+  }
+}
+.link-page lite-youtube {
+  border-radius: 10px;
+  box-sizing: unset;
+  border: 1px solid;
+  max-height: 300px;
+}

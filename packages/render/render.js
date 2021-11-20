@@ -1,11 +1,4 @@
-let fs = require('fs');
-let path = require('path');
-let stylus = require('stylus');
-let ejs = require('./lib/ejs.js');
-
-const CONSTANTS = require("./constants");
-
-let templateFile = fs.readFileSync(path.resolve(__dirname, 'src', 'template.html'), 'utf8');
+let templateFile = require("./src/template.html");
 
 let generateDefaultMetaData = (page) => {
 	return {
@@ -28,7 +21,7 @@ const isValidURL = (s) => {
 
 
 const loadStylus = async () => {
-	return fs.readFileSync(path.resolve(CONSTANTS.OWN_OUTPUT, "main.css"), "utf8");
+	return require("./dist/main.css");
 }
 
 let hydratePage = ({ meta, page, templateFile, mainStylus }) => {
@@ -61,7 +54,8 @@ let hydratePage = ({ meta, page, templateFile, mainStylus }) => {
 		.replace('<!-- PAGE-CONTENT -->', `<div class="link-page">${meta.html}</div>`)
 }
 
-let render = async (page, options = {}, templates = require(path.resolve(__dirname, "dist", "templates.js")).default) => {
+let render = async (page, templates, options = {}) => {
+	if (!templates) templates = await require("./dist/templates.js").default();
 	if (!page) throw "no page provided";
 	if (!templates) throw "no templates provided";
 	let available_templates = Object.keys(templates);

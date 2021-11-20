@@ -2,3 +2,5 @@
 
 # include this dist
 !/dist
+# but don't include temp
+/dist/temp

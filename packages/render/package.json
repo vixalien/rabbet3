@@ -2,7 +2,7 @@
   "name": "@rabbet/render",
   "version": "0.0.0",
   "description": "Render Rabbet Pages",
-  "main": "render.js",
+  "main": "dist/render.js",
   "license": "MIT",
   "private": true,
   "author": "vixalien",
@@ -11,6 +11,11 @@
   },
   "dependencies": {
     "esbuild": "^0.13.12",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "stylus": "^0.55.0"
+  },
+  "devDependencies": {
+    "esbuild-plugin-resolve": "^1.0.3"
   }
 }

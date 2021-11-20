@@ -1,8 +1,5 @@
-import fs from "fs";
-import path from "path";
-
-import ejs from "../../lib/ejs";
-import stylus from "../../lib/stylus";
+const React = require("react");
+const ReactDOMServer = require("react-dom/server");
 
 let render = (page, meta) => {
 	let config = {
@@ -19,12 +16,14 @@ let render = (page, meta) => {
 		});
 	};
 
-	config.html = ejs.render(meta.data.ejsString, { page });
-	config.styles.push(meta.data.compiledStylus);
+	globalThis.React = React;
+	let Element = Function("return" + meta.data.jsFn)();
+	config.html = ReactDOMServer.renderToStaticMarkup(Element({ page }));
+	config.styles.push(meta.data.cssString);
 	return config;
 }
 
-let meta = {
+let template = {
 	"label": "lnks",
 	"settings": [
 		{
@@ -38,4 +37,4 @@ let meta = {
 	render,
 };
 
-export default meta;
+export default template;
