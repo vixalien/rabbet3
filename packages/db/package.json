@@ -1,0 +1,13 @@
+{
+  "name": "@rabbet/db",
+  "version": "0.0.0",
+  "description": "Perform queries for the Rabbet dashboard. Currently using Firebase.",
+  "main": "db.js",
+  "repository": "https://github.com/vixalien/rabbet",
+  "author": "vixalien",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "firebase": "^9.5.0"
+  }
+}
