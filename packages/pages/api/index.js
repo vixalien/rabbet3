@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 const express = require('express')
 var url = require('url');
 const app = express();
@@ -50,7 +51,8 @@ app.get('/', (req, res) => {
 })
 
 app.use(function (req, res, next) {
-	return res.status(404).sendFile(path.resolve("./404.html"));
+	console.log(fs.readdirSync("."));
+	return res.status(404).json(fs.readdirSync(path.resolve(__dirname, "..")))
 })
 
 app.listen(port, () => {
