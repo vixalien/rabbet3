@@ -22,7 +22,7 @@ let deleteAll = async (COLLECTION, ...queries) => {
 	const q = firestore.query(firestore.collection(db, COLLECTION), ...queries);
 	const querySnapshot = await firestore.getDocs(q);
 	return Promise.all((querySnapshot.docs || [])
-		.map(doc => doc.ref.delete()));
+		.map(doc => firestore.deleteDoc(doc.ref)));
 }
 
 let get = async (COLLECTION, id) => {
