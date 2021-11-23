@@ -56,7 +56,10 @@ app.use(function (req, res, next) {
 		pass.on('data', (chunk) => {
 				data.push(chunk)
 		});
-		http.request(req.protocol + '://' + req.get('host') + `/404.html`, (response) => {
+		http.request({
+			followAllRedirects: true,
+			url: req.protocol + '://' + req.get('host') + `/404.html`
+		}, (response) => {
 				response.pipe(pass).pipe(res);
 		}).end();
 })
