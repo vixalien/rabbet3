@@ -1,5 +1,5 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
+const { initializeApp } = require("firebase/app");
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -15,4 +15,4 @@ const firebaseConfig = {
 
 let init = () => initializeApp(firebaseConfig);
 
-export default init;
+module.exports = init;

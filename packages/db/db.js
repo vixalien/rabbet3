@@ -1,9 +1,9 @@
-import initApp from "./init";
+const initApp = require("./init");
 
-import * as firestore from "firebase/firestore";
+const firestore = require("firebase/firestore");
 // import { getFirestore, collection, query, where, getDocs, getDoc, setDoc, doc, addDoc } as firestore from "firebase/firestore";
-import { onAuthStateChanged, getAuth } from "firebase/auth";
-import isEqual from "./isequal";
+const { onAuthStateChanged, getAuth } = require("firebase/auth");
+const isEqual = require("./isequal");
 
 let query = async (COLLECTION, ...queries) => {
 	const db = firestore.getFirestore();
@@ -79,4 +79,4 @@ let getCurrentUser = async (auth) => {
 // 	return [loading, currentUser, setCurrentUser, load];
 // }
 
-export default { query, set, get, where: firestore.where, getCurrentUser, getRealUser, add, onCurrentUserChange, deleteAll };
+module.exports = { query, set, get, where: firestore.where, getCurrentUser, getRealUser, add, onCurrentUserChange, deleteAll };

@@ -1,6 +1,6 @@
-import db from "../db";
+const db = require("../db");
 
-import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged, getAdditionalUserInfo, getAuth } from "firebase/auth";
+const { signInWithPopup, GoogleAuthProvider, onAuthStateChanged, getAdditionalUserInfo, getAuth } = require("firebase/auth");
 
 let withGoogle = () => {
 	const auth = getAuth();
@@ -25,4 +25,4 @@ let logout = () => {
 
 let login = { withGoogle };
 
-export { login, logout };
+module.exports = { login, logout };
