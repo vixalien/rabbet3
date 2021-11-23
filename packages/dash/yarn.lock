@@ -238,6 +238,7 @@
   version "0.0.0"
   dependencies:
     esbuild "^0.13.12"
+    esbuild-plugin-resolve "^1.0.3"
     react "^17.0.2"
     react-dom "^17.0.2"
     stylus "^0.55.0"
@@ -1197,6 +1198,11 @@ esbuild-openbsd-64@0.13.14:
   version "0.13.14"
   resolved "https://registry.yarnpkg.com/esbuild-openbsd-64/-/esbuild-openbsd-64-0.13.14.tgz#3c7453b155ebb68dc34d5aec3bd6505337bdda08"
   integrity sha512-9bzvwewHjct2Cv5XcVoE1yW5YTW12Sk838EYfA46abgnhxGoFSD1mFcaztp5HHC43AsF+hQxbSFG/RilONARUA==
+
+esbuild-plugin-resolve@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/esbuild-plugin-resolve/-/esbuild-plugin-resolve-1.0.3.tgz#cb63004f896b21f09ffc53be1518c080ddeff3ab"
+  integrity sha512-DHtwExowoWa5rC+mLVppGqe4MiFCZsKEeNgps4UAOKqmu3CjUgyyFjw+AHXteGCRdCJID76OsUuyGi2cOLIxUQ==
 
 esbuild-sunos-64@0.13.14:
   version "0.13.14"

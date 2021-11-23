@@ -6,8 +6,9 @@ import HomePage from "./home";
 
 export default function Home() {
 	let account = useAccount();
+	let router = useRouter();
+
 	if (account.loggedIn) {
-		let router = useRouter();
 		router.push("/account");
 		return "";
 	}

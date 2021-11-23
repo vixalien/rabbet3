@@ -67,8 +67,7 @@ let EditPage = () => {
 							href={url}
 							className="normal"
 							target="_blank"
-							noopener
-							noreferrer
+							rel="noopener noreferrer"
 						>
 							{url} &#x2197;
 						</a>
