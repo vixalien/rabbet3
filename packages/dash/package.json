@@ -15,6 +15,7 @@
 		"build:templates": "node ../render/build -o templates"
 	},
 	"dependencies": {
+		"@rabbet/db": "../db",
 		"@rabbet/render": "../render",
 		"classnames": "^2.3.1",
 		"immer": "^9.0.6",
