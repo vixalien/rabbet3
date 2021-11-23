@@ -51,8 +51,7 @@ app.get('/', (req, res) => {
 })
 
 app.use(function (req, res, next) {
-	console.log(fs.readdirSync("."));
-	return res.status(404).json(fs.readdirSync(path.resolve(__dirname, "..")))
+	return res.status(404).render("404");
 })
 
 app.listen(port, () => {
