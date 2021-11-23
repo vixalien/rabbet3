@@ -58,6 +58,7 @@ let query = (collection, ...queries) => {
 		.then(data => data.json())
 		.then(data => {
 			return data.map(doc => {
+				if (!doc.document) return null;
 				return {
 					...doc.document,
 					_id: doc.document.name.replace(new RegExp('^' + CONSTANTS.ROOT_NAME.replace('(', '\\(').replace(')', '\\)') + '/' + collection + '/'), ''),
@@ -65,6 +66,7 @@ let query = (collection, ...queries) => {
 				}
 			})
 		})
+		.then(data => data.filter(n => n))
 
 	// test
 	// query("hello", ["username", "EQUAL", hello]);
