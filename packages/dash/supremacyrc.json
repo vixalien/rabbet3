@@ -1,0 +1,7 @@
+{
+	"insertColons": false,
+	"insertSemicolons": false,
+	"insertBraces": false,
+	"insertNewLineAroundBlocks": "root",
+	"ignoreFiles": ["node_modules/**"]
+}
