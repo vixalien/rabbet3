@@ -1,5 +1,4 @@
-const http = require('http');
-const {PassThrough} = require('stream');
+const path = require('path');
 const express = require('express')
 var url = require('url');
 const app = express();
@@ -51,17 +50,7 @@ app.get('/', (req, res) => {
 })
 
 app.use(function (req, res, next) {
-	const pass = new PassThrough();
-		const data = [];
-		pass.on('data', (chunk) => {
-				data.push(chunk)
-		});
-		http.request({
-			followAllRedirects: true,
-			url: req.protocol + '://' + req.get('host') + `/404.html`
-		}, (response) => {
-				response.pipe(pass).pipe(res);
-		}).end();
+	return res.status(404).sendFile(path.resolve("./404.html"));
 })
 
 app.listen(port, () => {
