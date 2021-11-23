@@ -3,6 +3,7 @@ import { useEffect } from "react";
 
 import "public/app.css";
 
+import initApp from "@rabbet/db/init";
 import Header from "components/header";
 import HomePage from "./home";
 
@@ -33,6 +34,7 @@ let Loading = ({ account, children }) => {
 };
 
 function MyApp({ Component, pageProps }) {
+	initApp();
 	let account = useAccount();
 
 	useEffect(() => {

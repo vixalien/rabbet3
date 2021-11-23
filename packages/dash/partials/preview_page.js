@@ -3,7 +3,7 @@ import render from "lib/render";
 
 import usePromise from "stores/promise";
 
-let MinimalPreviewPage = ({ page, valid = true }) => {
+let MinimalPreviewPage = ({ page, valid = true, ...props }) => {
 	if (!valid) {
 		return <main>Page data is invalid</main>;
 	}
@@ -26,12 +26,11 @@ let MinimalPreviewPage = ({ page, valid = true }) => {
 			type: "text/html",
 		});
 		url = URL.createObjectURL(file);
-		return <iframe className="preview-iframe" src={url} />;
+		return <iframe className="preview-iframe" src={url} {...props} />;
 	}
 };
 
 let MemoizedMPP = memo(MinimalPreviewPage, (a, b) => {
-	console.log(JSON.stringify(a) === JSON.stringify(b), b);
 	return JSON.stringify(a) === JSON.stringify(b);
 });
 

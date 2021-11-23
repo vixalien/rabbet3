@@ -1,28 +1,31 @@
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+
 import Header from "components/header";
 
+import useAccount from "stores/account";
+import usePage from "stores/page";
 import useOpenable from "stores/openable";
+
 import PreviewPagePartial from "partials/preview_page";
 
 let PreviewPage = () => {
-	let page = {
-		label: "Example Label",
-		slug: "test_slug",
-		about: "Text about text",
-		hero_type: "yembed",
-		hero: "1hbz9gehZgs",
-		links: [
-			{
-				label: "Instagram",
-				url: "https://instagram.com/angeloverlain",
-			},
-			{
-				label: "Email",
-				url: "mailto:hey@vixalien.ga",
-			},
-		],
-	};
+	let router = useRouter();
+	let account = useAccount();
+	let storedPage = usePage();
+	useEffect(() => storedPage.actions.load(account.data.uid, router.query.id), []);
 
 	let header = useOpenable();
+
+	if (storedPage.loading)
+		return (
+			<>
+				<main>
+					<Header />
+					<h1>Loading Page Preview...</h1>
+				</main>
+			</>
+		);
 
 	return (
 		<>
@@ -32,7 +35,7 @@ let PreviewPage = () => {
 						title={{
 							text: "Preview Page",
 							backText: "View Page",
-							backLink: `/pages/${page.slug}`,
+							backLink: `/pages/${storedPage.data.slug}`,
 							optionText: "Hide Header",
 							onOptionClick: header.toggle,
 						}}
@@ -46,7 +49,9 @@ let PreviewPage = () => {
 					</div>
 				</div>
 			)}
-			<PreviewPagePartial page={page} />
+			<div>
+				<PreviewPagePartial page={storedPage.data} onLoad={event => event.target.style.height = event.target.contentDocument.documentElement.scrollHeight + "px"}/>
+			</div>
 			<style jsx>{`
 				.floating-button-div div {
 					position: fixed;

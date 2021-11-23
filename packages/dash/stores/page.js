@@ -1,6 +1,8 @@
 import create from "zustand";
 import produce from "immer";
 
+import db from "@rabbet/db";
+
 import v from "lib/validate";
 import Unfreeze from "lib/unfreeze";
 
@@ -53,16 +55,61 @@ let getURLDimensions = (src) =>
 	});
 
 const usePage = create((set, get) => ({
-	data: defaultPage,
-	errors: defaultErrors,
-	valid: false,
+	data: {},
+	loading: true,
 	actions: {
+		load: (uid, slug) => {
+			return db
+				.query("pages", db.where("user_uid", "==", uid), db.where("slug", "==", slug))
+				.then(data => (data || [])[0])
+				.then(data => set({ data: { slug, ...data }, loading: false }))
+		},
+		delete: () => {
+			let page = get();
+			if (!page && !page.data && !page.data.slug) return;
+			return db
+				.deleteAll("pages", db.where("slug", "==", page.data.slug))
+				.then(data => (data || [])[0])
+				.then(data => set({ data: {}, loading: false }));
+		},
+		setData: (data) => {
+			return set(
+				produce((page) => {
+					page.data = data;
+					return page;
+				})
+			);
+		},
+	},
+}));
+
+const useEditablePage = create((set, get) => ({
+	valid: false,
+	data: {},
+	current: defaultPage,
+	errors: defaultErrors,
+	actions: {
+		setData: (data) => {
+			return set(
+				produce((page) => {
+					page.data = data;
+					page.current = data;
+					return page;
+				})
+			);
+		},
+		save: () => {
+			let page = get();
+			return db
+				.set("pages", page.uid, page.current, false)
+				.then(data => set({ data: { ...page.data, ...page.current } }))
+		},
 		addLink: () => {
 			return set(
 				produce((page) => {
-					let newLinks = [...page.data.links];
+					let newLinks = [...page.current.links];
 					newLinks.push(defaultLink);
-					page.data.links = newLinks;
+					page.current.links = newLinks;
 					return page;
 				})
 			);
@@ -70,9 +117,9 @@ const usePage = create((set, get) => ({
 		deleteLink: (index) => {
 			return set(
 				produce((page) => {
-					let newLinks = [...page.data.links];
+					let newLinks = [...page.current.links];
 					newLinks = newLinks.filter((link, id) => id != index);
-					page.data.links = newLinks;
+					page.current.links = newLinks;
 					return page;
 				})
 			);
@@ -80,7 +127,7 @@ const usePage = create((set, get) => ({
 		moveLinkUp: (index) => {
 			return set(
 				produce((page) => {
-					page.data.links = arraymove(page.data.links, index, index - 1);
+					page.current.links = arraymove(page.current.links, index, index - 1);
 					return page;
 				})
 			);
@@ -88,7 +135,7 @@ const usePage = create((set, get) => ({
 		moveLinkDown: (index) => {
 			return set(
 				produce((page) => {
-					page.data.links = arraymove(page.data.links, index, index + 1);
+					page.current.links = arraymove(page.current.links, index, index + 1);
 					return page;
 				})
 			);
@@ -96,21 +143,21 @@ const usePage = create((set, get) => ({
 		handleChange: (key) => (event) =>
 			set(
 				produce((page) => {
-					page.data[key] = event.target.value;
+					page.current[key] = event.target.value;
 				})
 			),
 		handleLinkChange: (index, key) => (event) =>
 			set(
 				produce((page) => {
-					page.data.links[index][key] = event.target.value;
+					page.current.links[index][key] = event.target.value;
 					return page;
 				})
 			),
 		handleHeroTypeChange: () => (event) =>
 			set(
 				produce((page) => {
-					console.log("hero type", event.target.value);
-					page.data.hero.type = event.target.value;
+					page.current.hero.type = event.target.value;
+					page.current.hero.value = "";
 				})
 			),
 		handleHeroChange: (key) => async (event) => {
@@ -118,7 +165,7 @@ const usePage = create((set, get) => ({
 				if (key == "yembed") {
 					return set(
 						produce((page) => {
-							page.data.hero = {
+							page.current.hero = {
 								type: "yembed",
 								value: event.target.value,
 							};
@@ -132,7 +179,7 @@ const usePage = create((set, get) => ({
 					let dimensions = await getURLDimensions(url).catch(() => [0, 0]);
 					return set(
 						produce((page) => {
-							page.data.hero = {
+							page.current.hero = {
 								type: "image",
 								value: {
 									_meta: {
@@ -150,7 +197,7 @@ const usePage = create((set, get) => ({
 				} else {
 					return set(
 						produce((page) => {
-							page.data.hero = {
+							page.current.hero = {
 								type: "none",
 								value: "",
 							};
@@ -167,18 +214,18 @@ const usePage = create((set, get) => ({
 				produce((page) => {
 					page.valid = true;
 					// validate page
-					let pageErrors = v(page.data, constraints.page);
+					let pageErrors = v(page.current, constraints.page);
 					if (pageErrors) page.valid = false;
 					page.errors = pageErrors || defaultErrors;
 					page.errors = Unfreeze(page.errors);
 					// validate hero
-					let pageHeroErrors = v(page.data.hero, constraints.hero);
+					let pageHeroErrors = v(page.current.hero, constraints.hero);
 					if (pageHeroErrors) page.valid = false;
 					page.errors.hero = pageHeroErrors || {};
 					page.errors.hero = Unfreeze(page.errors.hero);
 					// validate links
 					page.errors.links = [];
-					page.data.links.forEach((link, index) => {
+					page.current.links.forEach((link, index) => {
 						let linkErrors = v(link, constraints.link);
 						if (linkErrors) page.valid = false;
 						page.errors.links[index] = linkErrors || {};
@@ -187,15 +234,31 @@ const usePage = create((set, get) => ({
 				})
 			);
 		},
-		setData: (data) => {
-			return set(
-				produce((page) => {
-					page.data = data;
-					return page;
-				})
-			);
+		validateAll: async () => {
+			let page = get();
+			page.actions.validate();
+			// check if the slug is not already taken
+			if (
+				page.current.slug !=
+				page.data.slug /* && (!page.errors.slug)*/
+			) {
+				await db
+					.query("pages", db.where("slug", "==", page.current.slug))
+					.then((accounts) => {
+						if (accounts && accounts.length) {
+							return set(
+								produce((page) => {
+									page.valid = false;
+									page.errors.slug = "is already taken";
+									return page;
+								})
+							);
+						}
+					});
+			}
 		},
-	},
-}));
+	}
+}))
 
 export default usePage;
+export { useEditablePage };

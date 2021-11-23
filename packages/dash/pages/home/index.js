@@ -1,6 +1,11 @@
+import { login } from "@rabbet/db/account";
+
 import Button from "components/button";
 
 let HomePage = () => {
+	if (typeof window != "undefined") {
+		window.login = login;
+	}
 	return (
 		<main>
 			<div>
@@ -19,23 +24,23 @@ let HomePage = () => {
 				<hr />
 				<div>
 					<p>
-						<div>
-							<b>EARLY ACCESS.</b> Build a small site from links and text
-						</div>
+						<b>EARLY ACCESS.</b>{" "}
+						<span>Build a small site from links and text</span>
 						<br />
-						<Button>Continue with Google</Button>
+						<br />
+						<Button onClick={login.withGoogle}>Continue with Google</Button>
 						<br />
 					</p>
 				</div>
 				<hr />
 				<br />
 				<br />
-				<h2>The World&apos;s simplest link aggregator</h2>
+				<h2>The World's simplest link aggregator</h2>
 				<p>Creating a page is as easy as 1,2,3 with Rabbet.</p>
 				<h3>1. Define your page</h3>
 				<p>
 					Show the necessary Label for your page, a slug that will affect the
-					page&apos;s URL and optional text about your Page.
+					page's URL and optional text about your Page.
 				</p>
 				<img src="/images/home/top.svg" width="100%" />
 				<h3>2. Add links</h3>

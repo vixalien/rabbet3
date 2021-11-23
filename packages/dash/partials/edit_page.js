@@ -18,7 +18,7 @@ let EditPage = ({
 	onSave = () => {},
 }) => {
 	let editor = useOpenable();
-	let page = usePage((page) => page.data);
+	let page = usePage((page) => page.current);
 	let actions = usePage((page) => page.actions);
 	let valid = usePage((page) => page.valid);
 	let errors = usePage((page) => page.errors);
@@ -30,7 +30,7 @@ let EditPage = ({
 		event.preventDefault();
 		actions.validate();
 		if (valid) {
-			onSave(page);
+			onSave(event);
 		} else {
 			toast.error("Page data is invalid. Please fix all errors before saving");
 		}
@@ -61,7 +61,7 @@ let EditPage = ({
 							label="Hero type"
 							options={{
 								None: "none",
-								Image: "image",
+							//	Image: "image",
 								"YouTube embed": "yembed",
 							}}
 							value={page.hero.type}
@@ -133,6 +133,7 @@ let EditPage = ({
 					)}
 					<div>
 						<button
+							type="button"
 							onClick={(e) => {
 								e.preventDefault();
 								actions.addLink();
@@ -164,6 +165,7 @@ let EditPage = ({
 											/>
 											<div>
 												<button
+													type="button"
 													onClick={(e) => {
 														e.preventDefault();
 														actions.moveLinkUp(index);
@@ -174,6 +176,7 @@ let EditPage = ({
 												</button>
 												&nbsp;
 												<button
+													type="button"
 													onClick={(e) => {
 														e.preventDefault();
 														actions.moveLinkDown(index);
@@ -184,6 +187,7 @@ let EditPage = ({
 												</button>
 												&nbsp;
 												<button
+													type="button"
 													onClick={(e) => {
 														e.preventDefault();
 														actions.deleteLink(index);
@@ -201,7 +205,7 @@ let EditPage = ({
 						</ol>
 					</div>
 					<div>
-						<button onClick={validateThenSavePage}>{saveText}</button>
+						<button type="submit" onClick={validateThenSavePage}>{saveText}</button>
 					</div>
 				</form>
 			</main>

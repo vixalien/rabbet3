@@ -1,4 +1,7 @@
+import { useRouter } from "next/router";
 import { useEffect } from "react";
+
+import useAccount from "stores/account";
 import usePage from "stores/page";
 
 import Header from "components/header";
@@ -7,6 +10,7 @@ import Histogram from "components/histogram";
 
 import CONSTANTS from "lib/constants";
 import { copyButton } from "lib/copy";
+import toast from "lib/toast";
 
 let KeyPair = ({ map }) => {
 	return (
@@ -21,32 +25,32 @@ let KeyPair = ({ map }) => {
 };
 
 let EditPage = () => {
-	let storedPage = {
-		label: "Test page by vixalien",
-		slug: "test",
-		about:
-			"This is a test page to see if Rabbet works correctly. If you are seeing this: it does. Thanks! For reports reach out to @vixalien",
-		hero: {
-			type: "yembed",
-			value: "dQw4w9WgXcQ",
-		},
-		links: [
-			{
-				label: "Instagram",
-				url: "https://instagram.com/angeloverlain",
-			},
-			{
-				label: "Email",
-				url: "mailto:hey@vixalien.ga",
-			},
-		],
-	};
-	let username = "vixalien";
+	const router = useRouter();
+	let account = useAccount();
+	let storedPage = usePage();
+	useEffect(() => storedPage.actions.load(account.data.uid, router.query.id), []);
 
-	let setData = usePage((page) => page.actions.setData);
-	useEffect(() => setData(storedPage), [storedPage]);
+	let url = CONSTANTS.LINKS.GET_PAGE(account.data.username, storedPage.data.slug);
 
-	let url = CONSTANTS.LINKS.GET_PAGE(username, storedPage.slug);
+	if (storedPage.loading)
+		return (
+			<>
+				<main>
+					<Header />
+					<h1>Loading Page...</h1>
+				</main>
+			</>
+		);
+
+	if (!storedPage.data)
+		return (
+			<>
+				<main>
+					<Header />
+					<h1>No page with given slug found</h1>
+				</main>
+			</>
+		);
 
 	return (
 		<>
@@ -59,15 +63,16 @@ let EditPage = () => {
 					}}
 				/>
 				<div>
-					<h2>{storedPage.label}</h2>
-					<p>{storedPage.about}</p>
+					<h2>{storedPage.data.label}</h2>
+					<p>{storedPage.data.about}</p>
 					<div>
 						<b>Page URL: </b>
 						<a
 							href={url}
 							className="normal"
 							target="_blank"
-							rel="noopener noreferrer"
+							noopener="true"
+							noreferrer="true"
 						>
 							{url} &#x2197;
 						</a>
@@ -76,7 +81,7 @@ let EditPage = () => {
 					<Button onClick={copyButton} href={url}>
 						Copy page URL
 					</Button>{" "}
-					<Button href={`/pages/${storedPage.slug}/preview`}>
+					<Button href={`/pages/${storedPage.data.slug}/preview`}>
 						Preview Page
 					</Button>
 				</div>
@@ -98,8 +103,17 @@ let EditPage = () => {
 				</div>*/}
 				<div>
 					<h2>Actions</h2>
-					<Button href={`/pages/${storedPage.slug}/edit`}>Edit</Button>{" "}
-					<Button href={`/pages/${storedPage.slug}/delete`} delete>
+					<Button href={`/pages/${storedPage.data.slug}/edit`}>Edit</Button>{" "}
+					<Button delete onClick={e => {
+						e.preventDefault();
+						toast.promise(storedPage.actions.delete()
+							.then(() => router.push("/pages"))
+						, {
+							loading: "Deleting page...",
+							success: "Successfully deleted page",
+							error: "There was an error deleting the page. Are you offline?"
+						});
+					}}>
 						Delete
 					</Button>
 				</div>

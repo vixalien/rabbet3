@@ -1,33 +1,45 @@
 import { useEffect } from "react";
 
+import { logout } from "@rabbet/db/account";
+
 import Link from "components/link";
 import Input from "components/input";
 import Header from "components/header";
 import Button from "components/button";
 
-import useAccount from "stores/account";
+import useAccount, { useEditableAccount } from "stores/account";
 
-import toast from "lib/toast";
+import validateThenSave from "lib/validate-then-save";
 
 let AccountPage = () => {
 	let account = useAccount();
+	let editableAccount = useEditableAccount();
 
 	useEffect(() => {
-		account.validate();
+		editableAccount.init(account.data);
+	}, []);
+
+	useEffect(() => {
+		editableAccount.validate();
+	}, [JSON.stringify(editableAccount.current)]);
+
+	useEffect(() => {
+		editableAccount.setAccountData(account.data);
 	}, [JSON.stringify(account.data)]);
 
-	let validateThenSave = (event) => {
-		event.preventDefault();
-		account.validate();
-		if (account.valid) {
-			// onsave
-			console.log(account);
-		} else {
-			toast.error(
-				"Account data is invalid. Please fix all errors before saving"
-			);
-		}
-	};
+	let saveToDB = validateThenSave({
+		store: editableAccount,
+		staticStore: account,
+		useStore: useEditableAccount,
+		validate: () => editableAccount.validateAll(),
+		name: "Account",
+		changed: (current, data) => {
+			return (current.displayName != data.displayName ||
+				current.username != data.username);
+		},
+		DB_NAME: "users",
+		updateStore: data => account.actions.setData(data),
+	});
 
 	return (
 		<main>
@@ -42,20 +54,28 @@ let AccountPage = () => {
 				<div>
 					<Input
 						label="Display name"
-						value={account.data.displayName}
-						onChange={account.update("displayName")}
-						error={account.errors.displayName}
+						value={editableAccount.current.displayName}
+						onChange={editableAccount.update("displayName")}
+						error={editableAccount.errors.displayName}
 					/>
 					<Input
 						label="Username"
-						value={account.data.username}
-						onChange={account.update("username")}
-						error={account.errors.username}
+						value={editableAccount.current.username}
+						onChange={editableAccount.update("username")}
+						error={editableAccount.errors.username}
 					/>
 				</div>
 				<div>
-					<Button onClick={validateThenSave}>Save</Button>{" "}
-					<Button delete>Log out</Button>
+					<Button onClick={saveToDB}>Save</Button>{" "}
+					<Button
+						delete
+						onClick={(e) => {
+							e.preventDefault();
+							logout();
+						}}
+					>
+						Log out
+					</Button>
 				</div>
 				<br />
 				<div>

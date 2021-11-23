@@ -4,6 +4,8 @@ import Link from "components/link";
 import Header from "components/header";
 import Button from "components/button";
 
+import usePages from "stores/pages";
+import useAccount from "stores/account";
 import CONSTANTS from "lib/constants";
 
 let MiniPage = ({ username, page, hr = true }) => {
@@ -45,32 +47,21 @@ let Pages = ({ pages, username }) => {
 };
 
 let Dashboard = ({ currentUser }) => {
-	let [pages, setPages] = useState([
-		{
-			label: "First Page",
-			slug: "hello",
-		},
-		{
-			label: "Test Page",
-			slug: "test",
-		},
-		{
-			label: "Hi",
-			slug: "ho",
-		},
-	]);
+	let account = useAccount();
+	let pages = usePages();
 
-	let [loading, setLoading] = useState(false);
+	useEffect(() => pages.load(account.data), []);
 
-	if (loading)
+	if (pages.loading)
 		return (
 			<>
 				<main>
 					<Header />
-					<h1>Loading...</h1>
+					<h1>Loading Pages...</h1>
 				</main>
 			</>
 		);
+
 	return (
 		<>
 			<main>
@@ -97,7 +88,7 @@ let Dashboard = ({ currentUser }) => {
 					</>
 				)}
 				<br />
-				<Pages pages={pages} username={"vixalien"} />
+				<Pages pages={pages.data} username={account.data.username} />
 			</main>
 		</>
 	);

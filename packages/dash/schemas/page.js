@@ -28,6 +28,18 @@ let constraints = {
 				minimum: 3,
 				maximum: 40,
 			},
+			exclusion: [
+				"rabbet",
+				"rabbet3",
+				"dash",
+				"db",
+				"pages",
+				"hyper",
+				"r",
+				"redir",
+				"index",
+				"dns",
+			],
 			regex: [
 				{
 					format: /^[A-Za-z0-9]/,

@@ -31,12 +31,12 @@ let Histogram = ({ data = [[]], indices = [] }) => {
 				})}
 			</style>
 			<div className="histogram">
-				{data.map((item, index) => (
-					<div className="block" key={index}>
+				{data.map((item) => (
+					<div className="block">
 						<span className="bar-title">{item[0]}</span>
 						<div className="bars">
 							{item.slice(1).map((bar, index) => (
-								<div key={index} className={`bar bar-` + index} style={{ height: bar }} />
+								<div className={`bar bar-` + index} style={{ height: bar }} />
 							))}
 						</div>
 					</div>
@@ -45,7 +45,7 @@ let Histogram = ({ data = [[]], indices = [] }) => {
 			<br />
 			<div>
 				{indices.map((index, n) => (
-					<div key={n}>
+					<div>
 						<div
 							className="color-block"
 							style={{ backgroundColor: colors[n] }}
