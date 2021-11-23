@@ -35,12 +35,12 @@ let HomePage = () => {
 				<hr />
 				<br />
 				<br />
-				<h2>The World's simplest link aggregator</h2>
+				<h2>The World&apos;s simplest link aggregator</h2>
 				<p>Creating a page is as easy as 1,2,3 with Rabbet.</p>
 				<h3>1. Define your page</h3>
 				<p>
 					Show the necessary Label for your page, a slug that will affect the
-					page's URL and optional text about your Page.
+					page&apos;s URL and optional text about your Page.
 				</p>
 				<img src="/images/home/top.svg" width="100%" />
 				<h3>2. Add links</h3>
