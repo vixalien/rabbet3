@@ -1,3 +1,5 @@
+import CONSTANTS from "lib/constants";
+
 // validators
 let constraints = {
 	account: {
@@ -24,18 +26,7 @@ let constraints = {
 				minimum: 3,
 				maximum: 40,
 			},
-			exclusion: [
-				"rabbet",
-				"rabbet3",
-				"dash",
-				"db",
-				"pages",
-				"hyper",
-				"r",
-				"redir",
-				"index",
-				"dns",
-			],
+			exclusion: CONSTANTS.RESTRICTED_SLUGS,
 			regex: [
 				{
 					format: /^[A-Za-z0-9]/,
