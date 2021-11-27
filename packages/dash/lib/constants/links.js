@@ -1,7 +1,7 @@
 let META = {
 	PROTOCOL: "https://",
-	HOST: "rabbet3.vercel.app",
-	SUBDOMAINS: false,
+	HOST: "rabbet.me",
+	SUBDOMAINS: true,
 };
 
 let LINKS = {

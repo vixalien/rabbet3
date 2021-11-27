@@ -20,11 +20,12 @@ function fullUrl(req) {
 // because on Vercel: ignored
 // app.use(express.static('public'));
 
-app.get('/p/:username/:slug', async (req, res, next) => {
-	// let url = fullUrl(req);
-	// let subdomain = req.subdomains[0];
-	let username = req.params.username;
+app.get('/:slug', async (req, res, next) => {
+	let url = fullUrl(req);
+	let username = req.subdomains[0];
 	let slug = req.params.slug;
+
+	if (!username || !slug) return next();
 
 	// fetch user & page
 	// test username = vixalien
@@ -38,20 +39,21 @@ app.get('/p/:username/:slug', async (req, res, next) => {
 			return render(page.fields)
 				.then(html => res.send(html));
 		} else {
-			next();
+			return next();
 		}
 	} else {
-		next();
+		return next();
 	}
 })
 
 app.get('/', (req, res) => {
-	// return to main page
-	res.send('Main Page!');
+	// redirect to rabbet dash
+	res.redirect("https://dash.rabbet.me");
 })
 
 app.use(function (req, res, next) {
-	return res.status(404).render("404");
+	res.status(404);
+	return fs.createReadStream(path.resolve(__dirname, "../public/404.html")).pipe(res);
 })
 
 app.listen(port, () => {
