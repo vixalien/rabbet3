@@ -2,6 +2,7 @@
 	"name": "Rabbet Dashboard",
 	"short_name": "rabbet",
 	"start_url": "/",
+	"id": "/",
 	"icons": [
 		{
 			"src": "/icons/android-chrome-192x192.png",
@@ -15,7 +16,7 @@
 		},
 		{
 			"src": "/icons/maskable.png",
-			"sizes": "192x192",
+			"sizes": "512x512",
 			"type": "image/png",
 			"purpose": "maskable"
 		}
