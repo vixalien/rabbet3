@@ -1,0 +1,26 @@
+{
+	"name": "Rabbet Dashboard",
+	"short_name": "rabbet",
+	"start_url": "/",
+	"icons": [
+		{
+			"src": "/icons/android-chrome-192x192.png",
+			"sizes": "192x192",
+			"type": "image/png"
+		},
+		{
+			"src": "/icons/android-chrome-512x512.png",
+			"sizes": "512x512",
+			"type": "image/png"
+		},
+		{
+			"src": "/icons/maskable.png",
+			"sizes": "192x192",
+			"type": "image/png",
+			"purpose": "maskable"
+		}
+	],
+	"theme_color": "#f39d7f",
+	"background_color": "#fff",
+	"display": "minimal-ui"
+}
