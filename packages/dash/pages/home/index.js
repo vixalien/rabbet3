@@ -47,7 +47,7 @@ let HomePage = () => {
 				<p>Add any links you want to be visible on your page.</p>
 				<img src="/images/home/links.svg" width="100%" />
 				<h3>3. Publish.</h3>
-				<p>Click Save anf your page is live. Immediately!</p>
+				<p>Click Save and your page is live. Immediately!</p>
 				<img src="/images/home/browser.svg" width="100%" />
 				<p>
 					<b>&copy; Rabbet 2021</b>
