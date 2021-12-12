@@ -4,5 +4,8 @@
     "api/index.js": {
       "includeFiles": "public/404.html"
     }
-  }
+  },
+  "redirects": [
+    { "source": "/", "destination": "https://dash.rabbet.me/account" }
+  ]
 }
