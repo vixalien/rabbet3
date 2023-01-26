@@ -20,6 +20,32 @@ function fullUrl(req) {
 // because on Vercel: ignored
 // app.use(express.static('public'));
 
+app.get('/p/:username/:slug', async (req, res, next) => {
+	let url = fullUrl(req);
+	let username = req.params.username;
+	let slug = req.params.slug;
+
+	if (!username || !slug) return next();
+
+	// fetch user & page
+	// test username = vixalien
+	// test slug = test
+	let user = await firestore.query("users", ["username", "==", username]).then(e => e[0])
+	if (user) {
+		let page = await firestore.query("pages", ["user_uid", "==", user._id], ["slug", "==", slug]).then(e => e[0])
+		if (page) {
+			// render the page
+			res.setHeader('Content-Type', 'text/html');
+			return render(page.fields)
+				.then(html => res.send(html));
+		} else {
+			return next();
+		}
+	} else {
+		return next();
+	}
+})
+
 app.get('/:slug', async (req, res, next) => {
 	let url = fullUrl(req);
 	let username = req.subdomains[0];
